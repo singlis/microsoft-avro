@@ -72,14 +72,14 @@ namespace Microsoft.Hadoop.Avro.Serializers
             var body = new List<Expression>();
 
             Type type = this.Schema.RuntimeType;
-            MethodInfo addElement = type.GetMethod("Add", new[] { this.Schema.ItemSchema.RuntimeType });
+            MethodInfo addElement = type.GetTypeInfo().GetMethod("Add", new[] { this.Schema.ItemSchema.RuntimeType });
             if (addElement == null)
             {
                 throw new SerializationException(
                     string.Format(CultureInfo.InvariantCulture, "Collection type '{0}' does not have Add method.", this.Schema.RuntimeType));
             }
 
-            var ctor = type.GetConstructor(new Type[] { });
+            var ctor = type.GetTypeInfo().GetConstructor(new Type[] { });
             if (ctor == null)
             {
                 throw new SerializationException(
@@ -102,7 +102,7 @@ namespace Microsoft.Hadoop.Avro.Serializers
                     Expression.Block(
                         Expression.Assign(currentNumberOfElements, Expression.Call(decoder, "DecodeArrayChunk", new Type[] { })),
                         Expression.IfThen(Expression.Equal(currentNumberOfElements, Expression.Constant(0)), Expression.Break(allRead)),
-                        Expression.Assign((type.GetProperty("Capacity") != null) ? Expression.Property(result, "Capacity") : (Expression)counter, Expression.Add(index, currentNumberOfElements)),
+                        Expression.Assign((type.GetTypeInfo().GetProperty("Capacity") != null) ? Expression.Property(result, "Capacity") : (Expression)counter, Expression.Add(index, currentNumberOfElements)),
                         Expression.Assign(counter, Expression.Constant(0)),
                         Expression.Loop(
                             Expression.Block(

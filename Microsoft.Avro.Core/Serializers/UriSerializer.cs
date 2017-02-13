@@ -36,13 +36,13 @@ namespace Microsoft.Hadoop.Avro.Serializers
 
         protected override Expression BuildSerializerSafe(Expression encoder, Expression value)
         {
-            PropertyInfo original = this.Schema.RuntimeType.GetProperty("OriginalString");
+            PropertyInfo original = this.Schema.RuntimeType.GetPropertyByName("OriginalString");
             return Expression.Call(encoder, this.Encode<string>(), new Expression[] { Expression.Property(value, original) });
         }
 
         protected override Expression BuildDeserializerSafe(Expression decoder)
         {
-            ConstructorInfo constructor = this.Schema.RuntimeType.GetConstructor(new[] { typeof(string) });
+            ConstructorInfo constructor = this.GetType().GetTypeInfo().GetConstructor(new[] { typeof(string) });
             if (constructor == null)
             {
                 throw new SerializationException(string.Format(

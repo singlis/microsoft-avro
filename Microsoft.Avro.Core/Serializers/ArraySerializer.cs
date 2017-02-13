@@ -42,7 +42,7 @@ namespace Microsoft.Hadoop.Avro.Serializers
 
         protected override Expression BuildSerializerSafe(Expression encoder, Expression value)
         {
-            PropertyInfo getLength = this.Schema.RuntimeType.GetProperty("Length");
+            PropertyInfo getLength = this.GetType().GetTypeInfo().GetProperty("Length");
             if (getLength == null)
             {
                 throw new SerializationException(
@@ -82,7 +82,7 @@ namespace Microsoft.Hadoop.Avro.Serializers
         {
             Type arrayType = this.Schema.RuntimeType;
 
-            MethodInfo resize = typeof(Array).GetMethod("Resize").MakeGenericMethod(arrayType.GetElementType());
+            MethodInfo resize = typeof(Array).GetTypeInfo().GetMethod("Resize").MakeGenericMethod(arrayType.GetElementType());
             var body = new List<Expression>();
 
             ParameterExpression result = Expression.Variable(arrayType, "result");

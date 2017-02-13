@@ -69,7 +69,7 @@ namespace Microsoft.Hadoop.Avro.Serializers
 
         protected override Expression BuildSerializerSafe(Expression encoder, Expression value)
         {
-            PropertyInfo length = typeof(byte[]).GetProperty("Length");
+            PropertyInfo length = typeof(byte[]).GetTypeInfo().GetProperty("Length");
             var exception = Expression.Constant(
                     new SerializationException(
                         string.Format(

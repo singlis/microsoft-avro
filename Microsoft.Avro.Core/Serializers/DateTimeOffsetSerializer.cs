@@ -39,11 +39,11 @@ namespace Microsoft.Hadoop.Avro.Serializers
 
         protected override Expression BuildSerializerSafe(Expression encoder, Expression value)
         {
-            MethodInfo convertDateTimeToPosixTime = typeof(DateTimeSerializer).GetMethod(
+            MethodInfo convertDateTimeToPosixTime = typeof(DateTimeSerializer).GetTypeInfo().GetMethod(
                 "ConvertDateTimeToPosixTime", BindingFlags.Static | BindingFlags.Public);
 
-            MethodInfo toString = this.Schema.RuntimeType.GetMethod("ToString", new[] { typeof(string) });
-            PropertyInfo dateTime = this.Schema.RuntimeType.GetProperty("DateTime");
+            MethodInfo toString = this.Schema.RuntimeType.GetTypeInfo().GetMethod("ToString", new[] { typeof(string) });
+            PropertyInfo dateTime = this.Schema.RuntimeType.GetTypeInfo().GetProperty("DateTime");
             return this.usePosixTime
                 ? Expression.Call(
                     encoder,
@@ -57,11 +57,11 @@ namespace Microsoft.Hadoop.Avro.Serializers
 
         protected override Expression BuildDeserializerSafe(Expression decoder)
         {
-            MethodInfo convertPosixTimeToDateTime = typeof(DateTimeSerializer).GetMethod(
+            MethodInfo convertPosixTimeToDateTime = typeof(DateTimeSerializer).GetTypeInfo().GetMethod(
                 "ConvertPosixTimeToDateTime", BindingFlags.Static | BindingFlags.Public);
-            MethodInfo parse = this.Schema.RuntimeType.GetMethod(
+            MethodInfo parse = this.GetType().GetTypeInfo().GetMethod(
                 "Parse", new[] { typeof(string), typeof(IFormatProvider), typeof(DateTimeStyles) });
-            ConstructorInfo ctor = this.Schema.RuntimeType.GetConstructor(new[] { typeof(DateTime) });
+            ConstructorInfo ctor = this.GetType().GetTypeInfo().GetConstructor(new[] { typeof(DateTime) });
             if (ctor == null)
             {
                 throw new SerializationException(

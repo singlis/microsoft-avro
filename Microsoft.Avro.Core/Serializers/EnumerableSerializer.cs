@@ -50,10 +50,10 @@ namespace Microsoft.Hadoop.Avro.Serializers
             Type enumeratorType = typeof(IEnumerator<>).MakeGenericType(this.Schema.ItemSchema.RuntimeType);
             Type enumerableType = typeof(IEnumerable<>).MakeGenericType(this.Schema.ItemSchema.RuntimeType);
             MethodInfo encodeArrayChunk = this.Encode("ArrayChunk");
-            MethodInfo getEnumerator = enumerableType.GetMethod("GetEnumerator");
-            MethodInfo moveNext = typeof(IEnumerator).GetMethod("MoveNext");
-            MethodInfo clear = listType.GetMethod("Clear");
-            MethodInfo add = listType.GetMethod("Add");
+            MethodInfo getEnumerator = enumerableType.GetTypeInfo().GetMethod("GetEnumerator");
+            MethodInfo moveNext = typeof(IEnumerator).GetTypeInfo().GetMethod("MoveNext");
+            MethodInfo clear = listType.GetTypeInfo().GetMethod("Clear");
+            MethodInfo add = listType.GetTypeInfo().GetMethod("Add");
 
             var bufferSize = Expression.Variable(typeof(int), "bufferSize");
             var buffer = Expression.Variable(listType, "buffer");
@@ -129,7 +129,7 @@ namespace Microsoft.Hadoop.Avro.Serializers
             LabelTarget chunkLoop = Expression.Label();
             LabelTarget enumerableLoop = Expression.Label();
 
-            var ctor = type.GetConstructor(new Type[] { });
+            var ctor = type.GetTypeInfo().GetConstructor(new Type[] { });
             if (ctor == null)
             {
                 throw new SerializationException(

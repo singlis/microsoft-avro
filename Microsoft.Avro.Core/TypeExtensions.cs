@@ -107,14 +107,15 @@ namespace Microsoft.Hadoop.Avro
         {
             return type.GetTypeInfo().IsClass
                 && type.GetTypeInfo().GetCustomAttributes(false).Any(a => a is CompilerGeneratedAttribute)
-                && !type.IsNested
-                && type.Name.StartsWith("<>", StringComparison.Ordinal)
+                && !type.GetTypeInfo().IsNested
+                && type.GetTypeInfo().Name.StartsWith("<>", StringComparison.Ordinal)
                 && type.Name.Contains("__Anonymous");
         }
 
         public static PropertyInfo GetPropertyByName(
-            this Type type, string name, BindingFlags flags = BindingFlags.Public | BindingFlags.FlattenHierarchy | BindingFlags.Instance)
+            this Type type, string name)
         {
+			BindingFlags flags = BindingFlags.Public | BindingFlags.FlattenHierarchy | BindingFlags.Instance;
             return type.GetProperty(name, flags);
         }
 
@@ -130,7 +131,7 @@ namespace Microsoft.Hadoop.Avro
             }
 
             return
-                type
+                type.GetTypeInfo()
                 .GetMethods(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
                 .FirstOrDefault(m => (m.Name.EndsWith(shortName, StringComparison.Ordinal) ||
                                        m.Name.EndsWith("." + shortName, StringComparison.Ordinal))
@@ -154,7 +155,7 @@ namespace Microsoft.Hadoop.Avro
                 BindingFlags.NonPublic |
                 BindingFlags.Instance |
                 BindingFlags.DeclaredOnly;
-            return t
+            return t.GetTypeInfo()
                 .GetFields(Flags)
                 .Where(f => !f.IsDefined(typeof(CompilerGeneratedAttribute), false))
                 .Concat(GetAllFields(t.GetTypeInfo().BaseType));
@@ -178,7 +179,7 @@ namespace Microsoft.Hadoop.Avro
                 BindingFlags.Instance |
                 BindingFlags.DeclaredOnly;
 
-            return t
+            return t.GetTypeInfo()
                 .GetProperties(Flags)
                 .Where(p => !p.IsDefined(typeof(CompilerGeneratedAttribute), false)
                             && p.GetIndexParameters().Length == 0)
@@ -244,10 +245,10 @@ namespace Microsoft.Hadoop.Avro
                    && ! type.IsUnsupported()
                    && (type.GetTypeInfo().IsSubclassOf(baseType) 
                    || type == baseType 
-                   || (baseType.GetTypeInfo().IsInterface && baseType.GetTypeInfo().IsAssignableFrom(type))
+                   || (baseType.GetTypeInfo().IsInterface && baseType.IsAssignableFrom(type))
                    || (baseType.GetTypeInfo().IsGenericType && baseType.GetTypeInfo().IsInterface && baseType.GenericIsAssignable(type)
                            && type.GetGenericArguments()
-                                  .Zip(baseType.GetTypeInfo().GetGenericArguments(), (type1, type2) => new Tuple<Type, Type>(type1, type2))
+                                  .Zip(baseType.GetGenericArguments(), (type1, type2) => new Tuple<Type, Type>(type1, type2))
                                   .ToList()
                                   .TrueForAll(tuple => CanBeKnownTypeOf(tuple.Item1, tuple.Item2))));
         }

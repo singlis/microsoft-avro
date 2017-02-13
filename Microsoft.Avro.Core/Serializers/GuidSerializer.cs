@@ -39,12 +39,12 @@ namespace Microsoft.Hadoop.Avro.Serializers
                 throw new SerializationException("Schema runtime type is expected to be of type guid.");
             }
 
-            this.guidConstructor = this.Schema.RuntimeType.GetConstructor(new[] { typeof(byte[]) });
+            this.guidConstructor = this.GetType().GetTypeInfo().GetConstructor(new[] { typeof(byte[]) });
         }
 
         protected override Expression BuildSerializerSafe(Expression encoder, Expression value)
         {
-            Expression toByteArray = Expression.Call(value, this.Schema.RuntimeType.GetMethod("ToByteArray"));
+            Expression toByteArray = Expression.Call(value, this.GetType().GetTypeInfo().GetMethod("ToByteArray"));
             return Expression.Call(encoder, this.Encode("Fixed"), new[] { toByteArray });
         }
 
