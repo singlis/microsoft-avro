@@ -129,7 +129,7 @@ namespace Microsoft.Hadoop.Avro.Serializers
             LabelTarget chunkLoop = Expression.Label();
             LabelTarget enumerableLoop = Expression.Label();
 
-            var ctor = type.GetTypeInfo().GetConstructor(new Type[] { });
+            var ctor = type.GetConstructor(new Type[] { });
             if (ctor == null)
             {
                 throw new SerializationException(

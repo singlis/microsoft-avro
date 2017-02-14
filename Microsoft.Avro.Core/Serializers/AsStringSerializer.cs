@@ -35,7 +35,7 @@ namespace Microsoft.Hadoop.Avro.Serializers
 
         protected override Expression BuildSerializerSafe(Expression encoder, Expression value)
         {
-            MethodInfo toString = this.GetType().GetTypeInfo().GetMethod("ToString", new Type[] { });
+            MethodInfo toString = this.Schema.RuntimeType.GetMethod("ToString", new Type[] { });
             return Expression.Call(
                 encoder,
                 this.Encode<string>(),
@@ -44,7 +44,7 @@ namespace Microsoft.Hadoop.Avro.Serializers
 
         protected override Expression BuildDeserializerSafe(Expression decoder)
         {
-            MethodInfo parse = this.GetType().GetTypeInfo().GetMethod("Parse", new[] { typeof(string) });
+            MethodInfo parse = this.Schema.RuntimeType.GetMethod("Parse", new[] { typeof(string) });
             return Expression.Call(
                 parse,
                 Expression.Call(decoder, this.Decode<string>()));

@@ -82,7 +82,7 @@ namespace Microsoft.Hadoop.Avro.Serializers
         {
             Type arrayType = this.Schema.RuntimeType;
 
-            MethodInfo resize = typeof(Array).GetTypeInfo().GetMethod("Resize").MakeGenericMethod(arrayType.GetElementType());
+            MethodInfo resize = typeof(Array).GetMethod("Resize").MakeGenericMethod(arrayType.GetElementType());
             var body = new List<Expression>();
 
             ParameterExpression result = Expression.Variable(arrayType, "result");

@@ -42,7 +42,7 @@ namespace Microsoft.Hadoop.Avro.Serializers
 
         protected override Expression BuildDeserializerSafe(Expression decoder)
         {
-            ConstructorInfo constructor = this.GetType().GetTypeInfo().GetConstructor(new[] { typeof(string) });
+            ConstructorInfo constructor = this.Schema.RuntimeType.GetConstructor(new[] { typeof(string) });
             if (constructor == null)
             {
                 throw new SerializationException(string.Format(

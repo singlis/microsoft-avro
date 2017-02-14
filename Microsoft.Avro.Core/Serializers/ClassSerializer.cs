@@ -146,7 +146,7 @@ namespace Microsoft.Hadoop.Avro.Serializers
         {
             Type objectType = this.Schema.RuntimeType;
             MethodInfo getDeserializer = this.GetType()
-                .GetTypeInfo().GetMethod("GetDeserializer", BindingFlags.Instance | BindingFlags.NonPublic).MakeGenericMethod(objectType);
+                .GetMethod("GetDeserializer", BindingFlags.Instance | BindingFlags.NonPublic).MakeGenericMethod(objectType);
             MethodCallExpression serializer = Expression.Call(Expression.Constant(this), getDeserializer);
             return Expression.Invoke(serializer, new[] { decoder });
         }
@@ -160,7 +160,7 @@ namespace Microsoft.Hadoop.Avro.Serializers
         private Expression CallCachedSerialize(Expression encoder, Expression value)
         {
             MethodInfo getSerializer = this.GetType()
-                .GetTypeInfo().GetMethod("GetSerializer", BindingFlags.Instance | BindingFlags.NonPublic)
+                .GetMethod("GetSerializer", BindingFlags.Instance | BindingFlags.NonPublic)
                 .MakeGenericMethod(this.Schema.RuntimeType);
             MethodCallExpression serializer = Expression.Call(Expression.Constant(this), getSerializer);
             return Expression.Invoke(serializer, new[] { value, encoder });
@@ -222,7 +222,7 @@ namespace Microsoft.Hadoop.Avro.Serializers
 
         private Expression CallCachedSkipper(Expression decoder)
         {
-            MethodInfo getSkipper = this.GetType().GetTypeInfo().GetMethod("GetSkipper", BindingFlags.Instance | BindingFlags.NonPublic);
+            MethodInfo getSkipper = this.GetType().GetMethod("GetSkipper", BindingFlags.Instance | BindingFlags.NonPublic);
             MethodCallExpression skipper = Expression.Call(Expression.Constant(this), getSkipper);
             return Expression.Invoke(skipper, new[] { decoder });
         }

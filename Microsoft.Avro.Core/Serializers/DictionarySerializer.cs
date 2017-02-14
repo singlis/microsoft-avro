@@ -94,7 +94,7 @@ namespace Microsoft.Hadoop.Avro.Serializers
             }
 
             ParameterExpression result = Expression.Variable(type, "result");
-            var ctor = type.GetTypeInfo().GetConstructor(new Type[] { });
+            var ctor = type.GetConstructor(new Type[] { });
             if (ctor == null)
             {
                 throw new SerializationException(

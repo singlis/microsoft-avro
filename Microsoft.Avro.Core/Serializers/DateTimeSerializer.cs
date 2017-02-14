@@ -59,7 +59,7 @@ namespace Microsoft.Hadoop.Avro.Serializers
             MethodInfo convertPosixTimeToDateTime = typeof(DateTimeSerializer).GetTypeInfo().GetMethod(
                 "ConvertPosixTimeToDateTime", BindingFlags.Static | BindingFlags.Public);
 
-            ConstructorInfo ctor = typeof(DateTime).GetTypeInfo().GetConstructor(new[] { typeof(long) });
+            ConstructorInfo ctor = typeof(DateTime).GetConstructor(new[] { typeof(long) });
             if (ctor == null)
             {
                 throw new InvalidOperationException(
