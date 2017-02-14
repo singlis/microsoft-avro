@@ -56,7 +56,7 @@ namespace Microsoft.Hadoop.Avro.Serializers
             }
 
             MethodInfo encodeArrayChunk = this.Encode("ArrayChunk");
-            MethodInfo getLength = this.GetType().GetTypeInfo().GetMethod("GetLength");
+            MethodInfo getLength = this.Schema.RuntimeType.GetMethod("GetLength");
             ParameterExpression length = Expression.Variable(typeof(int), "length");
             body.Add(Expression.Assign(length, Expression.Call(value, getLength, new Expression[] { Expression.Constant(currentRank) })));
             body.Add(Expression.Call(encoder, encodeArrayChunk, new Expression[] { length }));
@@ -153,12 +153,12 @@ namespace Microsoft.Hadoop.Avro.Serializers
                                     Expression.Break(internalLoopLabel)),
                                 Expression.Call(
                                     result,
-                                    valueType.GetTypeInfo().GetMethod("Add"),
+                                    valueType.GetMethod("Add"),
                                     new[]
                                     {
                                         this.GenerateBuildJaggedDeserializer(
                                             decoder,
-                                            valueType.GetTypeInfo().GetGenericArguments()[0],
+                                            valueType.GetGenericArguments()[0],
                                             currentRank + 1,
                                             maxRank)
                                     }),

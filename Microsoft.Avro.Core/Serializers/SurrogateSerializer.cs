@@ -43,7 +43,7 @@ namespace Microsoft.Hadoop.Avro.Serializers
         protected override Expression BuildSerializerSafe(Expression encoder, Expression value)
         {
             var surrogate = Expression.Constant(this.settings.Surrogate);
-            MethodInfo serialize = typeof(IAvroSurrogate).GetTypeInfo().GetMethod("GetObjectToSerialize");
+            MethodInfo serialize = typeof(IAvroSurrogate).GetMethod("GetObjectToSerialize");
 
             Expression castValue = this.Schema.RuntimeType.GetTypeInfo().IsValueType ? Expression.Convert(value, typeof(object)) : value;
 
@@ -62,7 +62,7 @@ namespace Microsoft.Hadoop.Avro.Serializers
             Expression obj = this.Schema.Surrogate.Serializer.BuildDeserializer(decoder);
 
             var surrogate = Expression.Constant(this.settings.Surrogate);
-            MethodInfo deserialize = typeof(IAvroSurrogate).GetTypeInfo().GetMethod("GetDeserializedObject");
+            MethodInfo deserialize = typeof(IAvroSurrogate).GetMethod("GetDeserializedObject");
 
             Expression deserialized = Expression.Call(surrogate, deserialize, new[] { obj, Expression.Constant(this.Schema.RuntimeType) });
             return this.Schema.RuntimeType.GetTypeInfo().IsValueType

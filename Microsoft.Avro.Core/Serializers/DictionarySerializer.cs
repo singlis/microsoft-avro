@@ -42,11 +42,11 @@ namespace Microsoft.Hadoop.Avro.Serializers
             var elementType = typeof(KeyValuePair<,>).MakeGenericType(new[] { this.Schema.KeySchema.RuntimeType, this.Schema.ValueSchema.RuntimeType });
             var enumeratorType = typeof(IEnumerator<>).MakeGenericType(new[] { elementType });
             var enumerableType = typeof(IEnumerable<>).MakeGenericType(elementType);
-            MethodInfo getEnumerator = enumerableType.GetTypeInfo().GetMethod("GetEnumerator");
-            var moveNext = typeof(IEnumerator).GetTypeInfo().GetMethod("MoveNext");
-            var current = enumeratorType.GetTypeInfo().GetProperty("Current");
-            var key = elementType.GetTypeInfo().GetProperty("Key");
-            var val = elementType.GetTypeInfo().GetProperty("Value");
+            MethodInfo getEnumerator = enumerableType.GetMethod("GetEnumerator");
+            var moveNext = typeof(IEnumerator).GetMethod("MoveNext");
+            var current = enumeratorType.GetProperty("Current");
+            var key = elementType.GetProperty("Key");
+            var val = elementType.GetProperty("Value");
 
             var body = new List<Expression>();
             MethodInfo encodeMapChunk = this.Encode("MapChunk");
@@ -72,7 +72,7 @@ namespace Microsoft.Hadoop.Avro.Serializers
                                 this.Schema.ValueSchema.Serializer.BuildSerializer(encoder, Expression.Property(Expression.Property(enumerator, current), val))),
                             Expression.Break(label)),
                         label),
-                    Expression.Call(Expression.TypeAs(enumerator, typeof(IDisposable)), typeof(IDisposable).GetTypeInfo().GetMethod("Dispose"))));
+                    Expression.Call(Expression.TypeAs(enumerator, typeof(IDisposable)), typeof(IDisposable).GetMethod("Dispose"))));
 
             body.Add(
                 Expression.IfThen(
@@ -86,7 +86,7 @@ namespace Microsoft.Hadoop.Avro.Serializers
             var body = new List<Expression>();
 
             Type type = this.Schema.RuntimeType;
-            MethodInfo addElement = type.GetTypeInfo().GetMethod("Add", new[] { this.Schema.KeySchema.RuntimeType, this.Schema.ValueSchema.RuntimeType });
+            MethodInfo addElement = type.GetMethod("Add", new[] { this.Schema.KeySchema.RuntimeType, this.Schema.ValueSchema.RuntimeType });
             if (addElement == null)
             {
                 throw new SerializationException(

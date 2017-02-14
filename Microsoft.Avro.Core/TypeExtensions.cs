@@ -113,9 +113,8 @@ namespace Microsoft.Hadoop.Avro
         }
 
         public static PropertyInfo GetPropertyByName(
-            this Type type, string name)
+            this Type type, string name, BindingFlags flags = BindingFlags.Public | BindingFlags.FlattenHierarchy | BindingFlags.Instance)
         {
-			BindingFlags flags = BindingFlags.Public | BindingFlags.FlattenHierarchy | BindingFlags.Instance;
             return type.GetProperty(name, flags);
         }
 
@@ -131,7 +130,7 @@ namespace Microsoft.Hadoop.Avro
             }
 
             return
-                type.GetTypeInfo()
+                type
                 .GetMethods(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
                 .FirstOrDefault(m => (m.Name.EndsWith(shortName, StringComparison.Ordinal) ||
                                        m.Name.EndsWith("." + shortName, StringComparison.Ordinal))
@@ -155,7 +154,7 @@ namespace Microsoft.Hadoop.Avro
                 BindingFlags.NonPublic |
                 BindingFlags.Instance |
                 BindingFlags.DeclaredOnly;
-            return t.GetTypeInfo()
+            return t
                 .GetFields(Flags)
                 .Where(f => !f.IsDefined(typeof(CompilerGeneratedAttribute), false))
                 .Concat(GetAllFields(t.GetTypeInfo().BaseType));
@@ -179,7 +178,7 @@ namespace Microsoft.Hadoop.Avro
                 BindingFlags.Instance |
                 BindingFlags.DeclaredOnly;
 
-            return t.GetTypeInfo()
+            return t
                 .GetProperties(Flags)
                 .Where(p => !p.IsDefined(typeof(CompilerGeneratedAttribute), false)
                             && p.GetIndexParameters().Length == 0)

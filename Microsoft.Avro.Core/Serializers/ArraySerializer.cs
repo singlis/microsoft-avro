@@ -42,7 +42,7 @@ namespace Microsoft.Hadoop.Avro.Serializers
 
         protected override Expression BuildSerializerSafe(Expression encoder, Expression value)
         {
-            PropertyInfo getLength = this.GetType().GetTypeInfo().GetProperty("Length");
+            PropertyInfo getLength = this.Schema.RuntimeType.GetProperty("Length");
             if (getLength == null)
             {
                 throw new SerializationException(

@@ -173,7 +173,7 @@ namespace Microsoft.Hadoop.Avro.Serializers
 
         private int MoreSpecializedTypesFirst(IndexedSchema s1, IndexedSchema s2)
         {
-            if (s1.Schema.RuntimeType.GetTypeInfo().IsAssignableFrom(s2.Schema.RuntimeType))
+            if (s1.Schema.RuntimeType.IsAssignableFrom(s2.Schema.RuntimeType))
             {
                 return 1;
             }

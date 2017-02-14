@@ -40,7 +40,7 @@ namespace Microsoft.Hadoop.Avro.Serializers
 
         protected override Expression BuildSerializerSafe(Expression encoder, Expression value)
         {
-            MethodInfo convertDateTimeToPosixTime = typeof(DateTimeSerializer).GetTypeInfo().GetMethod(
+            MethodInfo convertDateTimeToPosixTime = typeof(DateTimeSerializer).GetMethod(
                 "ConvertDateTimeToPosixTime", BindingFlags.Static | BindingFlags.Public);
 
             return Expression.Call(
@@ -50,13 +50,13 @@ namespace Microsoft.Hadoop.Avro.Serializers
                 {
                     this.usePosixTime
                         ? Expression.Call(convertDateTimeToPosixTime, value)
-                        : (Expression)Expression.Property(value, this.Schema.RuntimeType.GetTypeInfo().GetProperty("Ticks"))
+                        : (Expression)Expression.Property(value, this.Schema.RuntimeType.GetProperty("Ticks"))
                 });
         }
 
         protected override Expression BuildDeserializerSafe(Expression decoder)
         {
-            MethodInfo convertPosixTimeToDateTime = typeof(DateTimeSerializer).GetTypeInfo().GetMethod(
+            MethodInfo convertPosixTimeToDateTime = typeof(DateTimeSerializer).GetMethod(
                 "ConvertPosixTimeToDateTime", BindingFlags.Static | BindingFlags.Public);
 
             ConstructorInfo ctor = typeof(DateTime).GetConstructor(new[] { typeof(long) });

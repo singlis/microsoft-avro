@@ -37,21 +37,21 @@ namespace Microsoft.Hadoop.Avro.Serializers
 
         private static readonly Dictionary<string, MethodInfo> Encoders = new Dictionary<string, MethodInfo>
         {
-            { "ArrayChunk", typeof(IEncoder).GetTypeInfo().GetMethod("EncodeArrayChunk") },
-            { "MapChunk", typeof(IEncoder).GetTypeInfo().GetMethod("EncodeMapChunk") },
-            { "Fixed", typeof(IEncoder).GetTypeInfo().GetMethod("EncodeFixed") }
+            { "ArrayChunk", typeof(IEncoder).GetMethod("EncodeArrayChunk") },
+            { "MapChunk", typeof(IEncoder).GetMethod("EncodeMapChunk") },
+            { "Fixed", typeof(IEncoder).GetMethod("EncodeFixed") }
         };
 
         private static readonly Dictionary<string, MethodInfo> Decoders = new Dictionary<string, MethodInfo>
         {
-            { "ArrayChunk", typeof(IDecoder).GetTypeInfo().GetMethod("DecodeArrayChunk") },
-            { "MapChunk", typeof(IDecoder).GetTypeInfo().GetMethod("DecodeMapChunk") },
-            { "Fixed", typeof(IDecoder).GetTypeInfo().GetMethod("DecodeFixed") }
+            { "ArrayChunk", typeof(IDecoder).GetMethod("DecodeArrayChunk") },
+            { "MapChunk", typeof(IDecoder).GetMethod("DecodeMapChunk") },
+            { "Fixed", typeof(IDecoder).GetMethod("DecodeFixed") }
         };
 
         private static readonly Dictionary<string, MethodInfo> Skippers = new Dictionary<string, MethodInfo>
         {
-            { "Fixed", typeof(ISkipper).GetTypeInfo().GetMethod("SkipFixed") }
+            { "Fixed", typeof(ISkipper).GetMethod("SkipFixed") }
         };
 
         protected static readonly Expression ConstantZero = Expression.Constant(0);
@@ -97,7 +97,7 @@ namespace Microsoft.Hadoop.Avro.Serializers
 
         protected MethodInfo Encode<T>()
         {
-            var result = typeof(IEncoder).GetTypeInfo().GetMethod("Encode", new[] { typeof(T) });
+            var result = typeof(IEncoder).GetMethod("Encode", new[] { typeof(T) });
             if (result == null)
             {
                 throw new InvalidOperationException(

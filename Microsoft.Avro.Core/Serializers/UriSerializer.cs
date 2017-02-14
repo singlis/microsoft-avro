@@ -36,7 +36,7 @@ namespace Microsoft.Hadoop.Avro.Serializers
 
         protected override Expression BuildSerializerSafe(Expression encoder, Expression value)
         {
-            PropertyInfo original = this.Schema.RuntimeType.GetPropertyByName("OriginalString");
+            PropertyInfo original = this.Schema.RuntimeType.GetProperty("OriginalString");
             return Expression.Call(encoder, this.Encode<string>(), new Expression[] { Expression.Property(value, original) });
         }
 

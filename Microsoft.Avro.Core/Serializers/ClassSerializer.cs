@@ -116,7 +116,7 @@ namespace Microsoft.Hadoop.Avro.Serializers
                 // Cannot create an object beforehand. Have to call a constructor with parameters.
                 var properties = this.Schema.Fields.Select(f => f.TypeSchema.Serializer.BuildDeserializer(decoderParam));
                 ConstructorInfo ctor = objectType
-                    .GetTypeInfo().GetConstructors()
+                    .GetConstructors()
                     .Single(c => c.GetParameters().Select(p => p.ParameterType).SequenceEqual(this.Schema.Fields.Select(f => f.TypeSchema.RuntimeType)));
                 body.Add(Expression.Assign(instance, Expression.New(ctor, properties)));
             }
